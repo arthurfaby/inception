@@ -2,9 +2,11 @@ FROM debian:stable-slim
 
 RUN apt upgrade
 RUN apt update
-RUN apt install -y mariadb-client mariadb-server
-RUN usermod -d /var/lib/mysql/ mysql
-
+RUN apt install -y mariadb-server
+#RUN usermod -d /var/lib/mysql mysql
+#RUN rm -r /run/mysqld/mysqld.sock 
+RUN mkdir -p /run/mysqld 
+RUN chown -R mysql:mysql /run/mysqld
 EXPOSE 3306
 
-CMD ["mysql", "-u root"]
+CMD ["mysqld"]
