@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  mariadb:
+    build: requirements/mariadb/
+    container_name: my_mariadb
+    restart: always
+    environment:
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_USER=${DATABASE_USER}
+    ports:
+      - 3306:3306
+    networks:
+      - my_network
+    volumes:
+      - db:/var/lib/mysql
+
+  nginx:
+    build: requirements/nginx/
+    container_name: my_nginx
+    restart: always
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - wordpress_shared:/var/www/html/
+    networks:
+      - my_network
+    depends_on:
+      - wordpress
+  wordpress:
+    build: requirements/wordpress/
+    container_name: my_wordpress
+    restart: always
+    ports:
+      - 9000:9000
+    volumes:
+      - wordpress_shared:/var/www/html/
+    networks:
+      - my_network
+    depends_on:
+      - mariadb
+
+
+networks:
+  my_network:
+    driver: bridge
+
+volumes:
+  wordpress_shared:
+  db:
