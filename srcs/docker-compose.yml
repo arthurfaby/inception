@@ -6,10 +6,10 @@ services:
     container_name: my_mariadb
     restart: always
     environment:
-      - DATABASE_NAME=${DATABASE_NAME}
-      - DATABASE_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
-      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - DATABASE_USER=${DATABASE_USER}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
     ports:
       - 3306:3306
     networks:
@@ -17,6 +17,23 @@ services:
     volumes:
       - db:/var/lib/mysql
 
+  wordpress:
+    build: requirements/wordpress/
+    container_name: my_wordpress
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+    ports:
+      - 9000:9000
+    networks:
+      - my_network
+    volumes:
+      - wordpress_shared:/var/www/html/
+    depends_on:
+      - mariadb
   nginx:
     build: requirements/nginx/
     container_name: my_nginx
@@ -30,18 +47,7 @@ services:
       - my_network
     depends_on:
       - wordpress
-  wordpress:
-    build: requirements/wordpress/
-    container_name: my_wordpress
-    restart: always
-    ports:
-      - 9000:9000
-    volumes:
-      - wordpress_shared:/var/www/html/
-    networks:
-      - my_network
-    depends_on:
-      - mariadb
+
 
 
 networks:
@@ -49,5 +55,5 @@ networks:
     driver: bridge
 
 volumes:
-  wordpress_shared:
-  db:
+  wordpress_shared: {}
+  db: {}
