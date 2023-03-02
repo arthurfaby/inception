@@ -4,43 +4,48 @@ services:
   mariadb:
     build: requirements/mariadb/
     container_name: my_mariadb
+    image: mariadb
     restart: always
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-    ports:
-      - 3306:3306
+    env_file:
+      - .env
+#   environment:
+#     - MYSQL_DATABASE=${MYSQL_DATABASE}
+#     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+#     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+#     - MYSQL_USER=${MYSQL_USER}
     networks:
       - my_network
     volumes:
       - db:/var/lib/mysql
 
+
   wordpress:
     build: requirements/wordpress/
     container_name: my_wordpress
+    image: wordpress
     restart: always
-    environment:
-      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-    ports:
-      - 9000:9000
+    env_file:
+      - .env
+#   environment:
+#     WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+#     WORDPRESS_DB_USER: ${MYSQL_USER}
+#     WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+#     WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
     networks:
       - my_network
     volumes:
       - wordpress_shared:/var/www/html/
     depends_on:
       - mariadb
+
+
   nginx:
     build: requirements/nginx/
     container_name: my_nginx
+    image: nginx
     restart: always
     ports:
       - 443:443
-      - 80:80
     volumes:
       - wordpress_shared:/var/www/html/
     networks:
@@ -55,5 +60,15 @@ networks:
     driver: bridge
 
 volumes:
-  wordpress_shared: {}
-  db: {}
+  wordpress_shared:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/afaby/data/wordpress
+      o: bind
+  db:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/afaby/data/mysql
+      o: bind

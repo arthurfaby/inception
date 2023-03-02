@@ -3,18 +3,19 @@
 all: up
 
 up:
-	sudo service docker restart
-	sudo docker-compose -f ./srcs/docker-compose.yml up --build 
+	docker-compose -f ./srcs/docker-compose.yml up --build
 
 down:
-	sudo docker-compose -f ./srcs/docker-compose.yml down
+	docker-compose -f ./srcs/docker-compose.yml down
 
 clean:
-	sudo docker system prune -af
-	sudo docker volume prune -f
+	docker system prune -af
+	docker volume prune -f
+	rm -rf /home/afaby/data/mysql/*
+	rm -rf /home/afaby/data/wordpress/*
 
 fclean: clean
 
 re: fclean all
 
-.PHONY: all up clean fclean re
+.PHONY: all up down clean fclean re
