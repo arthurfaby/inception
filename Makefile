@@ -3,6 +3,8 @@
 all: up
 
 up:
+	mkdir -p /home/afaby/data/mysql
+	mkdir -p /home/afaby/data/wordpress
 	docker-compose -f ./srcs/docker-compose.yml up --build
 
 down:
@@ -11,8 +13,8 @@ down:
 clean:
 	docker system prune -af
 	docker volume prune -f
-	rm -rf /home/afaby/data/mysql/*
-	rm -rf /home/afaby/data/wordpress/*
+	sudo rm -rf /home/afaby/data/mysql/*
+	sudo rm -rf /home/afaby/data/wordpress/*
 
 fclean: clean
 

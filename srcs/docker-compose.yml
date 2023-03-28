@@ -8,11 +8,6 @@ services:
     restart: always
     env_file:
       - .env
-#   environment:
-#     - MYSQL_DATABASE=${MYSQL_DATABASE}
-#     - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-#     - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-#     - MYSQL_USER=${MYSQL_USER}
     networks:
       - my_network
     volumes:
@@ -26,11 +21,6 @@ services:
     restart: always
     env_file:
       - .env
-#   environment:
-#     WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-#     WORDPRESS_DB_USER: ${MYSQL_USER}
-#     WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-#     WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
     networks:
       - my_network
     volumes:

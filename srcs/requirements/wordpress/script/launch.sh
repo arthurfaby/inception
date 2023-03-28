@@ -40,9 +40,9 @@ else
 	mv wp-cli.phar /usr/local/bin/wp
 
 	log	"Changing wordpress config file with env variables."
-	sed -i "s/database_name_here/${WORDPRESS_DB_NAME}/g" wordpress/wp-config.php
-	sed -i "s/username_here/${WORDPRESS_DB_USER}/g" wordpress/wp-config.php
-	sed -i "s/password_here/${WORDPRESS_DB_PASSWORD}/g" wordpress/wp-config.php
+	sed -i "s/database_name_here/${MYSQL_DATABASE}/g" wordpress/wp-config.php
+	sed -i "s/username_here/${MYSQL_USER}/g" wordpress/wp-config.php
+	sed -i "s/password_here/${MYSQL_PASSWORD}/g" wordpress/wp-config.php
 	sed -i "s/localhost/${WORDPRESS_DB_HOST}/g" wordpress/wp-config.php
 	sed -i "s/false/true/g" wordpress/wp-config.php
 	log	"Installing wp core."
